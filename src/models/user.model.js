@@ -5,15 +5,15 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: [true, "Please fill in your email"],
+        unique: true,
         trim: true,
         lowercase: true,
-        unique: true, // Defines an index in MongoDB
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Please fill a valid email address"],
     },
     name: {
         type: String,
-        required: [true, "Please fill in your name"]
-        
+        required: [true, "Please fill in your name"],
+        trim: true,
     },
     password: {
         type: String,
@@ -26,21 +26,19 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-userSchema.pre("save", async function (next) {// Pre-save hook to hash the password before saving the user document
-    if (!this.isModified("password")) {// If the password field is not modified, skip hashing and move to the next middleware
-        return next();
-    }
-    
+// FIXED: Removed 'next' to support modern Mongoose async hooks
+userSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;
+
     try {
-        this.password = await bcrypt.hash(this.password, 12);// Hash the password with a salt round of 12
-        next();
+        this.password = await bcrypt.hash(this.password, 12);
     } catch (error) {
-        next(error);
+        throw error; // Mongoose will catch this as a rejection
     }
 });
-userSchema.methods.comparePassword = async function (candidatePassword) {// Method to compare the provided password with the hashed password in the database
+
+userSchema.methods.comparePassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
 };
 
-const User = mongoose.model("User", userSchema);
-module.exports = User;
+module.exports = mongoose.model("User", userSchema);
