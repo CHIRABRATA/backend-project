@@ -37,5 +37,9 @@ async function sendEmail(to, subject, text) {
         console.error('Error sending email: ', error);
     }
 }
-
-module.exports = { transporter, sendEmail };   
+async function sendRegistrationEmail(userEmail, userName) {
+    const subject = 'Welcome to Our App';
+    const text = `Hi ${userName},\n\nWelcome to our app! We're excited to have you on board.\n\nBest regards,\nThe Team`;
+    await sendEmail(userEmail, subject, text);
+}
+module.exports = { transporter, sendEmail, sendRegistrationEmail };   
