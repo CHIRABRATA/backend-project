@@ -29,13 +29,13 @@ async function userRegister(req, res) {
         const token = jwt.sign(
             { id: newUser._id }, 
             process.env.JWT_SECRET, 
-            { expiresIn: "1d" }
+            { expiresIn: "3d" }
         );
 
         // 5. Set Cookie (Optional but good practice)
         res.cookie("token", token, {
             httpOnly: true, // Prevents XSS attacks
-            maxAge: 24 * 60 * 60 * 1000 // 1 day
+            maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days
         });
 
         // 6. Send ONE final response
@@ -54,5 +54,53 @@ async function userRegister(req, res) {
         return res.status(500).json({ message: "Internal Server Error" });
     }
 }
+//user login funtion when user hit /api/auth/login then this
+//  function will be called and it will check the email and password and 
+// if they are correct then it will generate a token and send it to the client
+async function userlogin(req,res){
+    try {
+        const { email, password } = req.body;
 
-module.exports = { userRegister };
+        // 1. Find user by email
+        const user = await userModel.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        // 2. Check if password is correct
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        // 3. Generate Token
+        const token = jwt.sign(
+            { id: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "3d" }
+        );
+
+        // 4. Set Cookie (Optional but good practice)
+        res.cookie("token", token, {
+            httpOnly: true, // Prevents XSS attacks
+            maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days
+        });
+
+        // 5. Send ONE final response
+        return res.status(200).json({
+            message: "User logged in successfully",
+            token,
+            user: {
+                id: user._id,
+                email: user.email,
+                name: user.name
+            }
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+module.exports = { userRegister, userlogin };

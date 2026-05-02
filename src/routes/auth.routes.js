@@ -1,9 +1,12 @@
-const express=require("express");   
-const { route } = require("../app");
-const router=express.Router();
-const {userRegister}=require("../controllers/auth.controller");
+const express = require("express");
+const router = express.Router();
 
-router.post("/register",userRegister);
+// 1. Import your controllers correctly
+// Make sure these names match exactly what is exported in auth.controller.js
+const { userRegister, userlogin } = require("../controllers/auth.controller");
 
+// 2. Define routes
+router.post("/register", userRegister);
+router.post("/login", userlogin);
 
-module.exports=router;
+module.exports = router;
