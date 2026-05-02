@@ -38,4 +38,4 @@ async function sendEmail(to, subject, text) {
     }
 }
 
-module.exports = transporter;   
+module.exports = { transporter, sendEmail };   
