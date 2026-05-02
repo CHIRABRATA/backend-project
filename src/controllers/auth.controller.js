@@ -1,6 +1,6 @@
 const userModel = require("../models/user.model");
 const jwt = require("jsonwebtoken");
-
+const { sendRegistrationEmail } = require("../services/email.service");
 async function userRegister(req, res) {
     try {
         const { email, name, password } = req.body;
@@ -37,6 +37,8 @@ async function userRegister(req, res) {
             httpOnly: true, // Prevents XSS attacks
             maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days
         });
+        // Send registration email
+        await sendRegistrationEmail(newUser.email, newUser.name);  
 
         // 6. Send ONE final response
         return res.status(201).json({
@@ -85,6 +87,7 @@ async function userlogin(req,res){
             httpOnly: true, // Prevents XSS attacks
             maxAge: 3 * 24 * 60 * 60 * 1000 // 3 days
         });
+        
 
         // 5. Send ONE final response
         return res.status(200).json({
