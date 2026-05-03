@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const accountSchema = new mongoose.Schema({
-    useerId: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
@@ -22,7 +22,7 @@ const accountSchema = new mongoose.Schema({
     }
 
 },);
-accountSchema.index({ useerId: 1,status: 1 }); // Create an index on the userId field for faster queries
+accountSchema.index({ userId: 1, status: 1 }); // Create an index on the userId field for faster queries
 
 const accountModel = mongoose.model("Account", accountSchema);
 

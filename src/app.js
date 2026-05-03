@@ -4,14 +4,17 @@ const authrouter=require("./routes/auth.routes");
 const accountrouter=require("./routes/account.routes");
 const cookies=require("cookie-parser");
 
+
 const app = express();
 app.use(cookies());
+
 
 
 
 app.use(express.json());
 //api name is /api/auth/register
 app.use("/api/auth", authrouter);
+//api/account/create is the endpoint for creating a new account, and it is protected by the authMiddleware to ensure that only authenticated users can access it.
 app.use("/api/account", accountrouter);
 
 
