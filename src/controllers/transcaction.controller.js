@@ -44,5 +44,35 @@ if(!toUseraccount || toUseraccount.status !== "active"){
     return res.status(400).json({message:"To account is not active or does not exist"})
 }
 
+// trnascation check
+const session = await mongoose.startSession();
+try {
+    session.startTransaction();
+    // Debit from the sender's account
+    fromUseraccount.balance -= amount;
+    await fromUseraccount.save({ session });
+    // Credit to the receiver's account
+    toUseraccount.balance += amount;
+    await toUseraccount.save({ session });
+    // Create a transaction record
+    const transcation = new transcationModel({
+        fromaccountId,
+        toaccountId,
+        amount,
+        description: `Transfer from ${fromaccountId} to ${toaccountId}`,
+        status: "completed",
+        idempotencyKey: idempotencykey
+    });
+    await transcation.save({ session });
+
+    await session.commitTransaction();
+} catch (error) {
+    await session.abortTransaction();
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+} finally {
+    await session.endSession();
+}
+
 
 module.exports = { createTranscation };
