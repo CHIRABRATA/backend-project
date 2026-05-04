@@ -1,14 +1,13 @@
-const mongosse=require('mongoose');
-const authMiddleware=require('../middleware/auth.middleware');
+const mongoose=require('mongoose');
 
-const transcationSchema=new mongosse.Schema({
+const transcationSchema=new mongoose.Schema({
     fromaccountId:{
-        type:mongosse.Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:'Account',
         index:true // using b+tree index for faster lookups
     },
     toaccountId:{
-        type:mongosse.Schema.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:'Account',
         index:true // using b+tree index for faster lookups
     },
@@ -32,4 +31,6 @@ const transcationSchema=new mongosse.Schema({
     }
 });
 
-export const transcationModel=mongosse.model('Transcation',transcationSchema);
+const transcationModel=mongoose.model('Transcation',transcationSchema);
+
+module.exports = transcationModel;

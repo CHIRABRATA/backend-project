@@ -31,9 +31,6 @@ accountSchema.methods.getBalance = async function () {
         { $group: { _id: null, totalBalance: { $sum: "$balanceAfterTranscation" } } }
     ]);
     return balance.length > 0 ? balance[0].totalBalance : 0;  
-    if(balance<accountModel.balance){
-        throw new Error("Insufficient balance");
-    } 
 };
 const accountModel = mongoose.model("Account", accountSchema);
 

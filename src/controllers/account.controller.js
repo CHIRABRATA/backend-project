@@ -49,15 +49,37 @@ async function createAccount(req, res) {
     }
 }
 async function getuseraccountcontroller(req,res){
-    const account = await accountModel.findOne({userId:req.user._id});
-    if(!account){
-        return res.status(404).json({message:"Account not found"})
-    }   
-    res.status(200).json({account})
+    try {
+        if (!req.user || !req.user._id) {
+            return res.status(401).json({ message: "Unauthorized: User data missing" });
+        }
+        const account = await accountModel.findOne({userId:req.user._id});
+        if(!account){
+            return res.status(404).json({message:"Account not found"})
+        }   
+        res.status(200).json({account})
+    } catch (error) {
+        console.error("Error fetching account:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
 }
-const balance=accountModel.getBalance();
-req.status(200).json({balance})
 
+async function getUserBalance(req,res){
+    try {
+        if (!req.user || !req.user._id) {
+            return res.status(401).json({ message: "Unauthorized: User data missing" });
+        }
+        const account = await accountModel.findOne({userId:req.user._id});
+        if(!account){
+            return res.status(404).json({message:"Account not found"})
+        }
+        const balance = await account.getBalance();
+        return res.status(200).json({balance})
+    } catch (error) {
+        console.error("Error fetching balance:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
 
-// Ensure this matches how getyou import it in your routes!
-module.exports = { createAccount, getuseraccountcontroller, balance };
+// Ensure this matches how you import it in your routes!
+module.exports = { createAccount, getuseraccountcontroller, getUserBalance };

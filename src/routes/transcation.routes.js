@@ -1,13 +1,12 @@
-const {router} = require('express');
+const express = require('express');
+const router = express.Router();
 const authMiddleware=require('../middleware/auth.middleware');
-const {transcationModel}=require('../models/transcation.model');
-const accountModel=require('../models/account.model');
-const ledgerModel=require('../models/ledger.model');
-const transcation= requre('../controllers/transcaction.controller');
 
-const transcationRouter=router();
+// TODO: Implement transaction controller
+// const { createTransaction } = require('../controllers/transcaction.controller');
 
 // Create
-//api/transcation
-transcationRouter.post('/bank',authMiddleware, transcationService.createTranscation);
-module.exports=transcationRouter;
+//api/transcation/bank
+// router.post('/bank', authMiddleware, createTransaction);
+
+module.exports = router;

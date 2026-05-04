@@ -4,7 +4,7 @@ const app = require('./app');
 const connectDB = require('./config/db');
 
 const PORT = process.env.PORT || 3000;
-console.log("My URI is:", process.env.MONGODB_URI);
+console.log("My URI is:", process.env.MONGO_URI);
 
 // Connect to DB
 connectDB();

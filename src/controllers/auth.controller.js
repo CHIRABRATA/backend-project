@@ -116,4 +116,4 @@ async function userlogout(req,res){
 }
 
 
-module.exports = { userRegister, userlogin };
+module.exports = { userRegister, userlogin, userlogout };
