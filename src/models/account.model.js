@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const ledgerModel = require("./ledger.model");
+
 
 const accountSchema = new mongoose.Schema({
     userId: {
@@ -23,7 +25,16 @@ const accountSchema = new mongoose.Schema({
 
 },);
 accountSchema.index({ userId: 1, status: 1 }); // Create an index on the userId field for faster queries
-
+accountSchema.methods.getBalance = async function () {
+   const balance = await ledgerModel.aggregate([
+        { $match: { accountId: this._id } },
+        { $group: { _id: null, totalBalance: { $sum: "$balanceAfterTranscation" } } }
+    ]);
+    return balance.length > 0 ? balance[0].totalBalance : 0;  
+    if(balance<accountModel.balance){
+        throw new Error("Insufficient balance");
+    } 
+};
 const accountModel = mongoose.model("Account", accountSchema);
 
 module.exports = accountModel;
