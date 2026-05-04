@@ -16,6 +16,8 @@ app.use(express.json());
 app.use("/api/auth", authrouter);
 //api/account/create is the endpoint for creating a new account, and it is protected by the authMiddleware to ensure that only authenticated users can access it.
 app.use("/api/account", accountrouter);
+//route name is /api/transcation/bank and it is protected by the authMiddleware to ensure that only authenticated users can access it.
+app.use("/api/transcation", require("./routes/transcation.routes"));
 
 
 
