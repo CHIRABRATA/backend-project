@@ -64,6 +64,21 @@ try {
         idempotencyKey: idempotencykey
     });
     await transcation.save({ session });
+    const debitLedgerEntry = new legerModel({
+        accountId: fromaccountId,
+        amount: -amount,  
+        balanceAfterTranscation: fromUseraccount.balance,
+        description: `Debited ${amount} for transfer to account ${toaccountId}`
+    });
+    await debitLedgerEntry.save({ session });
+
+    const creditLedgerEntry = new legerModel({
+        accountId: toaccountId,
+        amount: amount,
+        balanceAfterTranscation: toUseraccount.balance,
+        description: `Credited ${amount} for transfer from account ${fromaccountId}`
+    });
+    await creditLedgerEntry.save({ session });
 
     await session.commitTransaction();
 } catch (error) {

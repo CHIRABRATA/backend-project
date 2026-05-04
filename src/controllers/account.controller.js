@@ -48,6 +48,16 @@ async function createAccount(req, res) {
         });
     }
 }
+async function getuseraccountcontroller(req,res){
+    const account = await accountModel.findOne({userId:req.user._id});
+    if(!account){
+        return res.status(404).json({message:"Account not found"})
+    }   
+    res.status(200).json({account})
+}
+const balance=accountModel.getBalance();
+req.status(200).json({balance})
 
-// Ensure this matches how you import it in your routes!
-module.exports = { createAccount };
+
+// Ensure this matches how getyou import it in your routes!
+module.exports = { createAccount, getuseraccountcontroller, balance };

@@ -3,10 +3,13 @@ const express = require("express");
 const authrouter=require("./routes/auth.routes");
 const accountrouter=require("./routes/account.routes");
 const cookies=require("cookie-parser");
+const transcationRouter=require("./routes/transcation.routes");
+const transaction=requre("./routes/transcation.js")
 
 
 const app = express();
 app.use(cookies());
+app.use("/api/transcation", transcationRouter);
 
 
 
@@ -18,6 +21,8 @@ app.use("/api/auth", authrouter);
 app.use("/api/account", accountrouter);
 //route name is /api/transcation/bank and it is protected by the authMiddleware to ensure that only authenticated users can access it.
 app.use("/api/transcation", require("./routes/transcation.routes"));
+//app.use("/api/transcation", transaction);
+app.use("/api/send",require("./routes/transaction.js") );
 
 
 
