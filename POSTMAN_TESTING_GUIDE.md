@@ -21,8 +21,7 @@ npm run dev
 
 ---
 
-## 📝 API Endpoints & Testing Steps
-
+## 📝 API Endpoints & Testing St
 ### **Step 1️⃣: Register User**
 **Endpoint:** `POST http://localhost:3000/api/auth/register`
 
